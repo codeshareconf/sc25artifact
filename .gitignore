@@ -1,7 +1,6 @@
 .vscode
 venv/
 
-*.sh
 *.mp4
 *.csv
 *.png
