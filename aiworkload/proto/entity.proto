@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package entity;
+
+service Operator {
+  rpc Operate (FileName) returns (Entity);
+}
+
+message Entity {
+  bytes entity = 1;
+}
+
+message FileName {
+    string filename = 1;
+}
