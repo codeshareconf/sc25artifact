@@ -7,22 +7,12 @@ import uuid
 
 app = Flask(__name__)
 
-@app.route('/getfile/<filename>')
-def get_file(filename):
+@app.route('/getfile/<classname>/<filename>')
+def get_file(classname,filename):
     try:        
-        fname = '/mnt/nvmedrive/'+filename
+        fname = '/mnt/nvmedrive/datasets/imagedata/{}/{}'.format(classname, filename)        
 
-        shutil.copy2(fname, filename)
-
-        @after_this_request
-        def remove_tempfile(response):
-            try:
-                os.remove(filename)
-            except Exception as e:
-                print("File cannot be deleted or not present")
-            return response
-
-        return send_file(filename, as_attachment=True, download_name=fname)
+        return send_file(fname, as_attachment=True, download_name=fname)
     except Exception as e:
         print(str(e))
         return "Error in file read"

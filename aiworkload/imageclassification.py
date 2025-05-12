@@ -44,7 +44,7 @@ class NVMeFDImageDataset(Dataset):
             self.idx_to_class[idx] = cls
             for img_name in filedict[cls]:
                 img_path = os.path.join("/mnt/nvmedrive", img_name[0])
-                if img_name.lower().endswith(('png', 'jpg', 'jpeg')):
+                if img_name[0].lower().endswith(('png', 'jpg', 'jpeg')):
                     self.image_paths.append(img_path)
                     self.image_size.append(img_name[1])
                     self.labels.append(idx)
@@ -77,7 +77,7 @@ class NVMeKVImageDataset(Dataset):
             self.idx_to_class[idx] = cls
             for img_name in filedict[cls]:
                 img_path = os.path.join("/mnt/nvmedrive", img_name[0])
-                if img_name.lower().endswith(('png', 'jpg', 'jpeg')):
+                if img_name[0].lower().endswith(('png', 'jpg', 'jpeg')):
                     self.image_paths.append(img_path)
                     self.labels.append(idx)
 
@@ -109,7 +109,7 @@ class HTTPImageDataset(Dataset):
             self.idx_to_class[idx] = cls
             for img_name in filedict[cls]:
                 img_path =img_name[0]
-                if img_name.lower().endswith(('png', 'jpg', 'jpeg')):
+                if img_path.lower().endswith(('png', 'jpg', 'jpeg')):
                     self.image_paths.append(img_path)
                     self.labels.append(idx)
 
@@ -119,8 +119,8 @@ class HTTPImageDataset(Dataset):
     def __getitem__(self, idx):
         img_path = self.image_paths[idx]
         label = self.labels[idx]
-        image_bytes = requests.get('URL/getfile/{}'.format(img_path))
-        image = Image.open(BytesIO(image_bytes)).convert('RGB')
+        image_bytes = requests.get('http://anchor.jf.intel.com:5012/getfile/{}/{}'.format(self.idx_to_class[label],img_path))
+        image = Image.open(BytesIO(image_bytes.content)).convert('RGB')
 
         if self.transform:
             image = self.transform(image)
